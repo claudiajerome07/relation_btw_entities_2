@@ -31,11 +31,42 @@ const initialProducts = [
 
 function App() {
 
- 
+  const [products, setProducts] = useState(initialProducts);
+
+  const handleRating=(productId,newRating)=>{
+    setProducts(prevProducts=>
+      prevProducts.map(product=>
+        product.id===productId ?{
+          ...product, avgRating: ((product.avgRating * product.totalRatings) + newRating) / (product.totalRatings + 1),
+          totalRatings:product.totalRatings+1
+        }:product
+      )
+    )
+  }
 
   return (
-    <div>
+    <div
+      className="App"
+      style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', padding: '20px' }}
+    >
      {/* code here */}
+     {
+      products.map(product=>{
+        return(
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            description={product.description}
+            image={product.image}
+            avgRating={product.avgRating.toFixed(1)}
+            totalRatings={product.totalRatings}
+            onRating={handleRating}
+          />
+        )
+        
+      })
+     }
     </div>
   );
 }
